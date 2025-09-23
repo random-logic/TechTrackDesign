@@ -286,7 +286,10 @@ def visualize_predictions(out_nms: Dict[str, List[Tuple[int, int, int, int, floa
         cv2.imwrite(save_path, image)
 
 # calls
-visualize_predictions(out1, 1)
+visualize_predictions(out1_nms, 1)
 visualize_predictions(out2_nms, 2)
 
 # %%
+# Get Coco mAP curve
+def get_map_curve(pred):
+    pass
