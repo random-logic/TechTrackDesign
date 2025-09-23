@@ -106,15 +106,10 @@ def save_detections_to_h5(
     """
     with h5py.File(get_path_in_storage(f"out{model_num}.h5"), "w", libver="latest") as f:
         for key, det_list in detections.items():
-            arr = np.empty((len(det_list), 6), dtype=np.float32)
-            for i, (x, y, w, h, confidence, class_id) in enumerate(det_list):
-                arr[i, 0] = int(x)
-                arr[i, 1] = int(y)
-                arr[i, 2] = int(w)
-                arr[i, 3] = int(h)
-                arr[i, 4] = np.float32(confidence)
-                arr[i, 5] = int(class_id)
-            f.create_dataset(key, data=arr, compression="gzip", compression_opts=1)
+            data_list = []
+            for (x, y, w, h, confidence, class_id) in det_list:
+                data_list.append([x, y, w, h, round(confidence, 8), class_id])
+            f.create_dataset(key, data=data_list, dtype="float32", compression="gzip", compression_opts=1)
 
 def load_detections_from_h5(
     model_num: int
@@ -129,7 +124,7 @@ def load_detections_from_h5(
     with h5py.File(get_path_in_storage(f"out{model_num}.h5"), "r") as f:
         for key in f.keys():
             arr = f[key][()]
-            detections[key] = [tuple(row) for row in arr]
+            detections[key] = [(int(row[0]), int(row[1]), int(row[2]), int(row[3]), float(row[4]), int(row[5])) for row in arr]
     return detections
 
 def get_gts(img_dims = (640, 640)):
@@ -207,6 +202,91 @@ out1_nms = get_nms(out1)
 out2_nms = get_nms(out2)
 
 # %%
+# Debug nms
+print(f"Model 1: Total predictions before NMS = {sum(len(v) for v in out1.values())}")
+print(f"Model 1: Total predictions after NMS = {sum(len(v) for v in out1_nms.values())}")
+print(f"Model 2: Total predictions before NMS = {sum(len(v) for v in out2.values())}")
+print(f"Model 2: Total predictions after NMS = {sum(len(v) for v in out2_nms.values())}")
 
+# %%
+# Visualize predictions for model 1 and model 2
+def visualize_predictions(out_nms: Dict[str, List[Tuple[int, int, int, int, float, int]]], model_num: int):
+    """
+    Draw boxes from out_nms and write annotated images to storage/predictions{model_num}/.
+    This function is defensive: it casts types, clamps to image bounds, and skips malformed items.
+    """
+    output_dir = get_path_in_storage(f"predictions{model_num}")
+    os.makedirs(output_dir, exist_ok=True)
+
+    for filename, detections in out_nms.items():
+        img_path = get_logistics_path(filename + ".jpg")
+        image = cv2.imread(img_path)
+        if image is None:
+            print(f"visualize_predictions: warning - image not found or unreadable: {img_path}")
+            continue
+
+        img_h, img_w = image.shape[:2]
+
+        for det in detections:
+            # expect det to be (x, y, w, h, confidence, class_id)
+            if not (isinstance(det, (list, tuple)) and len(det) == 6):
+                print(f"visualize_predictions: skipping malformed detection for {filename}: {det}")
+                continue
+
+            x_raw, y_raw, w_raw, h_raw, conf_raw, cls_raw = det
+
+            # robust casting
+            try:
+                x = int(x_raw)
+                y = int(y_raw)
+                box_w = int(w_raw)
+                box_h = int(h_raw)
+                confidence = float(conf_raw)
+                class_id = int(cls_raw)
+            except Exception:
+                # fallback: try casting via float then int
+                try:
+                    x = int(float(x_raw))
+                    y = int(float(y_raw))
+                    box_w = int(float(w_raw))
+                    box_h = int(float(h_raw))
+                    confidence = float(conf_raw)
+                    class_id = int(float(cls_raw))
+                except Exception as e:
+                    print(f"visualize_predictions: skipping detection with bad types for {filename}: {det} -> {e}")
+                    continue
+
+            # normalize and clamp coordinates to image bounds
+            if box_w < 0:
+                box_w = 0
+            if box_h < 0:
+                box_h = 0
+
+            x = max(0, min(x, img_w - 1))
+            y = max(0, min(y, img_h - 1))
+            x2 = max(0, min(x + box_w, img_w - 1))
+            y2 = max(0, min(y + box_h, img_h - 1))
+
+            top_left = (x, y)
+            bottom_right = (x2, y2)
+
+            # draw rectangle (wrapped in try to catch any odd cv2 type issues)
+            try:
+                cv2.rectangle(image, top_left, bottom_right, (0, 255, 0), 2)
+            except Exception as e:
+                print(f"visualize_predictions: cv2.rectangle failed for {filename} det {det}: {e}")
+                continue
+
+            # draw label above box if possible, otherwise below
+            label = f"{class_id}: {confidence:.2f}"
+            text_y = y - 10 if y - 10 > 10 else y + 20
+            cv2.putText(image, label, (x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+
+        save_path = os.path.join(output_dir, filename + ".jpg")
+        cv2.imwrite(save_path, image)
+
+# calls
+visualize_predictions(out1, 1)
+visualize_predictions(out2_nms, 2)
 
 # %%
