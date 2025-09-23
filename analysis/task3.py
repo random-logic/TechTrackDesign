@@ -150,3 +150,62 @@ def apply_nms(outputs: Dict[str, Tuple[np.ndarray, ...]],
 
 # ADD YOUR IMPLEMENTATION HERE
 # DO NOT CHANGE THE ABOVE CODE
+
+from torchmetrics.detection.mean_ap import MeanAveragePrecision
+import torch
+
+# get ground truths
+gts = get_ground_truths()
+
+def convert_for_torchmetrics(preds: Dict[str, Tuple[np.ndarray, ...]], gts: Dict[str, np.ndarray]):
+    torch_preds = []
+    torch_gts = []
+    for fname, dets in preds.items():
+        dets = dets[0]  # shape (N, 85)
+        if dets.shape[0] > 0:
+            boxes = []
+            scores = []
+            labels = []
+            for det in dets:
+                x, y, w, h = det[0:4]
+                # convert from (x,y,w,h) to (xmin,ymin,xmax,ymax)
+                boxes.append([x, y, x + w, y + h])
+                scores.append(float(torch.max(torch.tensor(det[5:]))))
+                labels.append(int(torch.argmax(torch.tensor(det[5:]))))
+            torch_preds.append({
+                "boxes": torch.tensor(boxes, dtype=torch.float32),
+                "scores": torch.tensor(scores, dtype=torch.float32),
+                "labels": torch.tensor(labels, dtype=torch.int64),
+            })
+        else:
+            torch_preds.append({
+                "boxes": torch.zeros((0, 4), dtype=torch.float32),
+                "scores": torch.zeros((0,), dtype=torch.float32),
+                "labels": torch.zeros((0,), dtype=torch.int64),
+            })
+
+        # ground truths
+        gt_arr = gts[fname]
+        boxes = []
+        labels = []
+        for gt in gt_arr:
+            cls, x, y, w, h = gt
+            boxes.append([x, y, x + w, y + h])
+            labels.append(int(cls))
+        torch_gts.append({
+            "boxes": torch.tensor(boxes, dtype=torch.float32),
+            "labels": torch.tensor(labels, dtype=torch.int64),
+        })
+    return torch_preds, torch_gts
+
+nms_thresholds = [0.3, 0.4, 0.5, 0.6, 0.7]
+for nms_th in [0.7]:
+    preds_nms = apply_nms(outputs_2, nms_threshold=nms_th)
+    torch_preds, torch_gts = convert_for_torchmetrics(preds_nms, gts)
+
+    metric = MeanAveragePrecision()
+    metric.update(torch_preds, torch_gts)
+    result = metric.compute()
+    print(f"NMS threshold {nms_th}: {result}")
+
+# %%
