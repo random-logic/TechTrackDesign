@@ -127,7 +127,7 @@ def load_detections_from_h5(
             detections[key] = [(int(row[0]), int(row[1]), int(row[2]), int(row[3]), float(row[4]), int(row[5])) for row in arr]
     return detections
 
-def get_gts(img_dims = (640, 640)):
+def get_gts(img_dims = (640, 640)) -> Dict[str, List[Tuple[int, int, int, int, int]]]:
     """
     Reads YOLO-format ground truth .txt files from the logistics directory.
     Each line in the file contains: class_id cx cy w h (all normalized coordinates).
@@ -149,7 +149,7 @@ def get_gts(img_dims = (640, 640)):
                 
                 class_id = int(parts[0])
                 cxcywh_norm = map(float, parts[1:])
-                xywh = cxcywh_norm_to_xywh(cxcywh_norm, img_dims)
+                xywh = cxcywh_norm_to_xywh(*cxcywh_norm, img_dims)
                 
                 gts.append((class_id, *xywh))
 
@@ -291,5 +291,73 @@ visualize_predictions(out2_nms, 2)
 
 # %%
 # Get Coco mAP curve
-def get_map_curve(pred):
-    pass
+def get_coco_gts_and_preds(gts: Dict[str, List[Tuple[int, int, int, int, int]]], preds: Dict[str, List[Tuple[int, int, int, int, float, int]]], img_dims = (640, 640)) -> Tuple[Dict, List]:
+    imgs = []
+    annotations = []
+    pred_res = []
+
+    for img_id, (img_name, img_gts) in enumerate(gts.items()):
+        imgs.append({
+            "id": img_id,
+            "file_name": f"{img_name}.jpg",
+            "width": img_dims[0],
+            "height": img_dims[1]
+        })
+
+        for class_id, x, y, w, h in img_gts:
+            annotations.append({
+                "id": len(annotations),
+                "image_id": img_id,
+                "category_id": class_id,
+                "bbox": [x, y, w, h],
+                "area": w * h,
+                "iscrowd": 0
+            })
+
+        for x, y, w, h, conf_score, class_id in preds[img_name]:
+            pred_res.append({
+                "id": len(pred_res),
+                "image_id": img_id,
+                "category_id": class_id,
+                "bbox": [x, y, w, h],
+                "score": conf_score
+            })
+
+    return {
+        "images": imgs,
+        "annotations": annotations,
+        "categories": [
+            {'id': 0, 'name': 'barcode'},
+            {'id': 1, 'name': 'car'},
+            {'id': 2, 'name': 'cardboard box'},
+            {'id': 3, 'name': 'fire'},
+            {'id': 4, 'name': 'forklift'},
+            {'id': 5, 'name': 'freight container'},
+            {'id': 6, 'name': 'gloves'},
+            {'id': 7, 'name': 'helmet'},
+            {'id': 8, 'name': 'ladder'},
+            {'id': 9, 'name': 'license plate'},
+            {'id': 10, 'name': 'person'},
+            {'id': 11, 'name': 'qr code'},
+            {'id': 12, 'name': 'road sign'},
+            {'id': 13, 'name': 'safety vest'},
+            {'id': 14, 'name': 'smoke'},
+            {'id': 15, 'name': 'traffic cone'},
+            {'id': 16, 'name': 'traffic light'},
+            {'id': 17, 'name': 'truck'},
+            {'id': 18, 'name': 'van'},
+            {'id': 19, 'name': 'wood pallet'}
+        ]
+    }, pred_res
+
+gts = get_gts()
+gts_coco, pred_coco = get_coco_gts_and_preds(gts, out2_nms)
+
+# %%
+gts_coco
+
+# %%
+pred_coco
+
+# %%
+
