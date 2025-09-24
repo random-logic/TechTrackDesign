@@ -290,7 +290,7 @@ visualize_predictions(out1_nms, 1)
 visualize_predictions(out2_nms, 2)
 
 # %%
-# Get Coco mAP curve
+# Get Coco formats
 def get_coco_gts_and_preds(gts: Dict[str, List[Tuple[int, int, int, int, int]]], preds: Dict[str, List[Tuple[int, int, int, int, float, int]]], img_dims = (640, 640)) -> Tuple[Dict, List]:
     imgs = []
     annotations = []
@@ -324,6 +324,8 @@ def get_coco_gts_and_preds(gts: Dict[str, List[Tuple[int, int, int, int, int]]],
             })
 
     return {
+        "info": {},
+        "licenses": [],
         "images": imgs,
         "annotations": annotations,
         "categories": [
@@ -351,13 +353,20 @@ def get_coco_gts_and_preds(gts: Dict[str, List[Tuple[int, int, int, int, int]]],
     }, pred_res
 
 gts = get_gts()
-gts_coco, pred_coco = get_coco_gts_and_preds(gts, out2_nms)
+gts_coco_1, pred_coco_1 = get_coco_gts_and_preds(gts, out1_nms)
+gts_coco_2, pred_coco_2 = get_coco_gts_and_preds(gts, out2_nms)
 
 # %%
-gts_coco
+import json
+
+# Save ground truth and predictions to temp json files
+with open(get_path_in_storage("gts_coco_1.json"), "w") as f:
+    json.dump(gts_coco_1, f)
+with open(get_path_in_storage("pred_coco_1.json"), "w") as f:
+    json.dump(pred_coco_1, f)
+with open(get_path_in_storage("gts_coco_2.json"), "w") as f:
+    json.dump(gts_coco_2, f)
+with open(get_path_in_storage("pred_coco_2.json"), "w") as f:
+    json.dump(pred_coco_2, f)
 
 # %%
-pred_coco
-
-# %%
-
