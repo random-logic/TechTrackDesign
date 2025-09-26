@@ -240,3 +240,24 @@ evaluate(0.8)
 evaluate(0.9)
 
 # %%
+# threshold of 0.6 is the best so save that
+def save_detections_to_h5(
+    detections: Dict[str, List[Tuple[int, int, int, int, float, int]]],
+    model_num: int
+) -> None:
+    """
+    Save detections as an HDF5 file.
+
+    detections: Dictionary mapping string keys to lists of tuples (x, y, w, h, confidence, class_id)
+    model_num: int - the model number to use
+    """
+    with h5py.File(get_path_in_storage(f"out{model_num}_sampled_nms.h5"), "w", libver="latest") as f:
+        for key, det_list in detections.items():
+            data_list = []
+            for (x, y, w, h, confidence, class_id) in det_list:
+                data_list.append([x, y, w, h, round(confidence, 8), class_id])
+            f.create_dataset(key, data=data_list, dtype="float32", compression="gzip", compression_opts=1)
+
+save_detections_to_h5(get_nms(out2, 0.5, 0.6), 2)
+
+# %%

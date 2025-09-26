@@ -276,4 +276,8 @@ Per-class mAPs:
   van: 0.2301
   wood pallet: 0.0206
 
+# Evaluation
+Threshold of 0.6 is the best.
+
 # Task 4
+
