@@ -28,7 +28,7 @@ def get_model_paths(model_num: int):
         os.path.join(path, f"yolov4-tiny-logistics_size_416_{model_num}.cfg")
     )
 
-def get_output_layers(net: Net) -> List[int]:
+def get_output_layers(net: Net) -> List[str]:
     """
     Returns the indices of the output layers in a cv2.dnn net
     """
@@ -118,7 +118,7 @@ def load_detections_from_h5(
     Load detections from an HDF5 file.
     model_num: int - the model num to use
 
-    Returns a dictionary mapping string keys to lists of tuples (x, y, w, h, confidence, class_id)
+    Returns a dictionary mapping string keys to lists of tuples (x, y, w, h, confidence, class_id) where x, y, w, h are all absolute pixel values
     """
     detections = {}
     with h5py.File(get_path_in_storage(f"out{model_num}.h5"), "r") as f:
