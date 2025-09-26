@@ -78,3 +78,202 @@ license plate: 359 (0.98%)
 ladder: 277 (0.75%)
 
 # Task 3
+### thr = 0.4
+IoU=0.50: mAP=0.2575
+IoU=0.55: mAP=0.2491
+IoU=0.60: mAP=0.2411
+IoU=0.65: mAP=0.2305
+IoU=0.70: mAP=0.2113
+IoU=0.75: mAP=0.1715
+IoU=0.80: mAP=0.1134
+IoU=0.85: mAP=0.0531
+IoU=0.90: mAP=0.0150
+IoU=0.95: mAP=0.0015
+Per-class mAPs:
+  barcode: 0.1795
+  car: 0.1864
+  cardboard box: 0.3688
+  fire: 0.0000
+  forklift: 0.2030
+  freight container: 0.0272
+  gloves: 0.1936
+  helmet: 0.0974
+  ladder: 0.0439
+  license plate: 0.1152
+  person: 0.1332
+  qr code: 0.3782
+  road sign: 0.0421
+  safety vest: 0.0722
+  smoke: 0.0423
+  traffic cone: 0.1424
+  traffic light: 0.1828
+  truck: 0.2726
+  van: 0.3857
+  wood pallet: 0.0217
+
+### thr = 0.5
+IoU=0.50: mAP=0.2588
+IoU=0.55: mAP=0.2499
+IoU=0.60: mAP=0.2415
+IoU=0.65: mAP=0.2308
+IoU=0.70: mAP=0.2116
+IoU=0.75: mAP=0.1718
+IoU=0.80: mAP=0.1136
+IoU=0.85: mAP=0.0532
+IoU=0.90: mAP=0.0150
+IoU=0.95: mAP=0.0015
+Per-class mAPs:
+  barcode: 0.1795
+  car: 0.1860
+  cardboard box: 0.3687
+  fire: 0.0000
+  forklift: 0.2030
+  freight container: 0.0272
+  gloves: 0.1936
+  helmet: 0.0982
+  ladder: 0.0454
+  license plate: 0.1152
+  person: 0.1337
+  qr code: 0.3782
+  road sign: 0.0421
+  safety vest: 0.0776
+  smoke: 0.0423
+  traffic cone: 0.1424
+  traffic light: 0.1828
+  truck: 0.2726
+  van: 0.3852
+  wood pallet: 0.0217
+
+### thr = 0.6
+IoU=0.50: mAP=0.2595
+IoU=0.55: mAP=0.2506
+IoU=0.60: mAP=0.2422
+IoU=0.65: mAP=0.2315
+IoU=0.70: mAP=0.2115
+IoU=0.75: mAP=0.1717
+IoU=0.80: mAP=0.1136
+IoU=0.85: mAP=0.0531
+IoU=0.90: mAP=0.0149
+IoU=0.95: mAP=0.0015
+Per-class mAPs:
+  barcode: 0.1795
+  car: 0.1869
+  cardboard box: 0.3686
+  fire: 0.0000
+  forklift: 0.2030
+  freight container: 0.0272
+  gloves: 0.1936
+  helmet: 0.0982
+  ladder: 0.0454
+  license plate: 0.1152
+  person: 0.1353
+  qr code: 0.3780
+  road sign: 0.0421
+  safety vest: 0.0865
+  smoke: 0.0423
+  traffic cone: 0.1423
+  traffic light: 0.1828
+  truck: 0.2683
+  van: 0.3833
+  wood pallet: 0.0217
+
+### thr = 0.7
+IoU=0.50: mAP=0.2569
+IoU=0.55: mAP=0.2477
+IoU=0.60: mAP=0.2390
+IoU=0.65: mAP=0.2296
+IoU=0.70: mAP=0.2094
+IoU=0.75: mAP=0.1711
+IoU=0.80: mAP=0.1139
+IoU=0.85: mAP=0.0523
+IoU=0.90: mAP=0.0147
+IoU=0.95: mAP=0.0015
+Per-class mAPs:
+  barcode: 0.1795
+  car: 0.1809
+  cardboard box: 0.3683
+  fire: 0.0000
+  forklift: 0.2004
+  freight container: 0.0256
+  gloves: 0.1936
+  helmet: 0.0982
+  ladder: 0.0433
+  license plate: 0.1152
+  person: 0.1350
+  qr code: 0.3780
+  road sign: 0.0421
+  safety vest: 0.0906
+  smoke: 0.0423
+  traffic cone: 0.1417
+  traffic light: 0.1834
+  truck: 0.2629
+  van: 0.3697
+  wood pallet: 0.0216
+
+### thr = 0.8
+IoU=0.50: mAP=0.2473
+IoU=0.55: mAP=0.2387
+IoU=0.60: mAP=0.2304
+IoU=0.65: mAP=0.2215
+IoU=0.70: mAP=0.2022
+IoU=0.75: mAP=0.1679
+IoU=0.80: mAP=0.1144
+IoU=0.85: mAP=0.0517
+IoU=0.90: mAP=0.0146
+IoU=0.95: mAP=0.0014
+Per-class mAPs:
+  barcode: 0.1795
+  car: 0.1620
+  cardboard box: 0.3667
+  fire: 0.0000
+  forklift: 0.1929
+  freight container: 0.0250
+  gloves: 0.1914
+  helmet: 0.0979
+  ladder: 0.0426
+  license plate: 0.1140
+  person: 0.1329
+  qr code: 0.3780
+  road sign: 0.0421
+  safety vest: 0.0912
+  smoke: 0.0395
+  traffic cone: 0.1426
+  traffic light: 0.1808
+  truck: 0.2441
+  van: 0.3358
+  wood pallet: 0.0214
+
+### thr = 0.9
+IoU=0.50: mAP=0.2224
+IoU=0.55: mAP=0.2139
+IoU=0.60: mAP=0.2069
+IoU=0.65: mAP=0.1982
+IoU=0.70: mAP=0.1809
+IoU=0.75: mAP=0.1500
+IoU=0.80: mAP=0.1047
+IoU=0.85: mAP=0.0506
+IoU=0.90: mAP=0.0148
+IoU=0.95: mAP=0.0015
+Per-class mAPs:
+  barcode: 0.1795
+  car: 0.1180
+  cardboard box: 0.3501
+  fire: 0.0000
+  forklift: 0.1803
+  freight container: 0.0229
+  gloves: 0.1707
+  helmet: 0.0965
+  ladder: 0.0414
+  license plate: 0.1158
+  person: 0.1290
+  qr code: 0.3713
+  road sign: 0.0403
+  safety vest: 0.0849
+  smoke: 0.0389
+  traffic cone: 0.1338
+  traffic light: 0.1684
+  truck: 0.1952
+  van: 0.2301
+  wood pallet: 0.0206
+
+# Task 4
