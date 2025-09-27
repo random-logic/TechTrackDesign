@@ -280,4 +280,103 @@ Per-class mAPs:
 Threshold of 0.6 is the best.
 
 # Task 4
+### Gaussian Blur
+IoU=0.50: mAP=0.1886
+IoU=0.55: mAP=0.1860
+IoU=0.60: mAP=0.1795
+IoU=0.65: mAP=0.1720
+IoU=0.70: mAP=0.1573
+IoU=0.75: mAP=0.1299
+IoU=0.80: mAP=0.0935
+IoU=0.85: mAP=0.0421
+IoU=0.90: mAP=0.0131
+IoU=0.95: mAP=0.0017
+Per-class mAPs:
+  barcode: 0.1779
+  car: 0.1390
+  cardboard box: 0.3387
+  fire: 0.0000
+  forklift: 0.1665
+  freight container: 0.0200
+  gloves: 0.1716
+  helmet: 0.0263
+  ladder: 0.0324
+  license plate: 0.0937
+  person: 0.0662
+  qr code: 0.3310
+  road sign: 0.0261
+  safety vest: 0.0422
+  smoke: 0.0297
+  traffic cone: 0.0944
+  traffic light: 0.1744
+  truck: 0.1545
+  van: 0.2260
+  wood pallet: 0.0170
 
+### Vertical Flip
+IoU=0.50: mAP=0.0373
+IoU=0.55: mAP=0.0342
+IoU=0.60: mAP=0.0299
+IoU=0.65: mAP=0.0254
+IoU=0.70: mAP=0.0211
+IoU=0.75: mAP=0.0139
+IoU=0.80: mAP=0.0070
+IoU=0.85: mAP=0.0028
+IoU=0.90: mAP=0.0005
+IoU=0.95: mAP=0.0000
+Per-class mAPs:
+  barcode: 0.0841
+  car: 0.0059
+  cardboard box: 0.0201
+  fire: 0.0000
+  forklift: 0.0000
+  freight container: 0.0119
+  gloves: 0.0010
+  helmet: 0.0011
+  ladder: 0.0050
+  license plate: 0.0015
+  person: 0.0008
+  qr code: 0.0320
+  road sign: 0.0054
+  safety vest: 0.0016
+  smoke: 0.0000
+  traffic cone: 0.0015
+  traffic light: 0.0280
+  truck: 0.1058
+  van: 0.0303
+  wood pallet: 0.0080
+
+### Adjust Brightness
+IoU=0.50: mAP=0.2507
+IoU=0.55: mAP=0.2437
+IoU=0.60: mAP=0.2347
+IoU=0.65: mAP=0.2216
+IoU=0.70: mAP=0.2010
+IoU=0.75: mAP=0.1648
+IoU=0.80: mAP=0.1121
+IoU=0.85: mAP=0.0503
+IoU=0.90: mAP=0.0124
+IoU=0.95: mAP=0.0014
+Per-class mAPs:
+  barcode: 0.1484
+  car: 0.1753
+  cardboard box: 0.3624
+  fire: 0.0000
+  forklift: 0.1996
+  freight container: 0.0282
+  gloves: 0.1942
+  helmet: 0.0928
+  ladder: 0.0454
+  license plate: 0.1149
+  person: 0.1307
+  qr code: 0.3780
+  road sign: 0.0411
+  safety vest: 0.0710
+  smoke: 0.0379
+  traffic cone: 0.1308
+  traffic light: 0.1884
+  truck: 0.2554
+  van: 0.3697
+  wood pallet: 0.0214
+
+# Task 5
