@@ -1,5 +1,6 @@
-# Task 1
-To achieve these results, we first applied NMS with confidence threshold 0.5 and IOU threshold 0.4. When matching ground truths to detections, we used an IOU threshold of 0.5.
+# Task 1 - Model Assessment
+
+To assess the 2 given models, we first applied NMS with confidence threshold 0.5 and IOU threshold 0.4. When matching ground truths to detections, we used an IOU threshold of 0.5.
 
 | Model | Precision  | Recall     | mAP        |
 |-------|------------|------------|------------|
@@ -31,9 +32,8 @@ To achieve these results, we first applied NMS with confidence threshold 0.5 and
 
 Model 2 outperforms Model 1 overall, achieving higher precision (0.9441 vs. 0.9212), recall (0.4135 vs. 0.3025), and mAP (0.3079 vs. 0.2561). At the per-class level, Model 2 shows clear improvements for cardboard box, forklift, gloves, ladder, person, safety vest, traffic light, truck, and van, often with substantial gains (e.g., gloves: 0.3128 vs 0.1552, truck: 0.3380 vs 0.2495, van: 0.4879 vs 0.4151). Model 1 performs slightly better on a few classes such as car (0.3042 vs. 0.2999), but the differences are small. Both models struggle equally on classes like fire (0.0000) and freight container (mAP < 0.05). Overall, Model 2 demonstrates broader and more consistent improvements across classes, making it the stronger choice.
 
-# Task 2
 
-### Sampling Strategy for TechTrack Dataset
+# Task 2 - Sampling Strategy
 
 To ensure that the TechTrack dataset is both representative and useful for evaluating model performance, we applied a stratified balanced sampling strategy with a total of 15,000 annotations from over 5000 images.
 
@@ -80,252 +80,62 @@ To ensure that the TechTrack dataset is both representative and useful for evalu
 
 The distribution in the sampled classes remains approximately the same as the original. Becasue we first sampled annotations and then selected the corresponding images (which may contain additional annotations outside the sampled set), the resulting image-level class percentages differ slightly from what stratified balanced sampling would ideally produce. Most classes differ by less than 2%, with the main exception being wood pallet, which is oversampled by about 4%. This is acceptable since its per-class mAP was relatively low, and the extra representation can help improve performance. Overall, the approach ensures rare and underperforming classes are more visible while maintaining the minimum image count requirement.
 
-# Task 3
-### thr = 0.4
-mAP=0.2575
-Per-class mAPs:
-  barcode: 0.1795
-  car: 0.1864
-  cardboard box: 0.3688
-  fire: 0.0000
-  forklift: 0.2030
-  freight container: 0.0272
-  gloves: 0.1936
-  helmet: 0.0974
-  ladder: 0.0439
-  license plate: 0.1152
-  person: 0.1332
-  qr code: 0.3782
-  road sign: 0.0421
-  safety vest: 0.0722
-  smoke: 0.0423
-  traffic cone: 0.1424
-  traffic light: 0.1828
-  truck: 0.2726
-  van: 0.3857
-  wood pallet: 0.0217
 
-### thr = 0.5
-mAP=0.2588
-Per-class mAPs:
-  barcode: 0.1795
-  car: 0.1860
-  cardboard box: 0.3687
-  fire: 0.0000
-  forklift: 0.2030
-  freight container: 0.0272
-  gloves: 0.1936
-  helmet: 0.0982
-  ladder: 0.0454
-  license plate: 0.1152
-  person: 0.1337
-  qr code: 0.3782
-  road sign: 0.0421
-  safety vest: 0.0776
-  smoke: 0.0423
-  traffic cone: 0.1424
-  traffic light: 0.1828
-  truck: 0.2726
-  van: 0.3852
-  wood pallet: 0.0217
+# Task 3 - Choosing NMS IOU Threshold
 
-### thr = 0.6
-mAP=0.2595
-Per-class mAPs:
-  barcode: 0.1795
-  car: 0.1869
-  cardboard box: 0.3686
-  fire: 0.0000
-  forklift: 0.2030
-  freight container: 0.0272
-  gloves: 0.1936
-  helmet: 0.0982
-  ladder: 0.0454
-  license plate: 0.1152
-  person: 0.1353
-  qr code: 0.3780
-  road sign: 0.0421
-  safety vest: 0.0865
-  smoke: 0.0423
-  traffic cone: 0.1423
-  traffic light: 0.1828
-  truck: 0.2683
-  van: 0.3833
-  wood pallet: 0.0217
+To evaluate the effect of NMS IOU thresholds, we compared mAP across thresholds from 0.4 to 0.9 using Model 2 (the best performing model from Task 1).
 
-### thr = 0.7
-mAP=0.2569
-Per-class mAPs:
-  barcode: 0.1795
-  car: 0.1809
-  cardboard box: 0.3683
-  fire: 0.0000
-  forklift: 0.2004
-  freight container: 0.0256
-  gloves: 0.1936
-  helmet: 0.0982
-  ladder: 0.0433
-  license plate: 0.1152
-  person: 0.1350
-  qr code: 0.3780
-  road sign: 0.0421
-  safety vest: 0.0906
-  smoke: 0.0423
-  traffic cone: 0.1417
-  traffic light: 0.1834
-  truck: 0.2629
-  van: 0.3697
-  wood pallet: 0.0216
+| Threshold | mAP        |
+|-----------|------------|
+| 0.4       | 0.2575     |
+| 0.5       | 0.2588     |
+| 0.6       | **0.2595** |
+| 0.7       | 0.2569     |
+| 0.8       | 0.2473     |
+| 0.9       | 0.2224     |
 
-### thr = 0.8
-mAP=0.2473
-Per-class mAPs:
-  barcode: 0.1795
-  car: 0.1620
-  cardboard box: 0.3667
-  fire: 0.0000
-  forklift: 0.1929
-  freight container: 0.0250
-  gloves: 0.1914
-  helmet: 0.0979
-  ladder: 0.0426
-  license plate: 0.1140
-  person: 0.1329
-  qr code: 0.3780
-  road sign: 0.0421
-  safety vest: 0.0912
-  smoke: 0.0395
-  traffic cone: 0.1426
-  traffic light: 0.1808
-  truck: 0.2441
-  van: 0.3358
-  wood pallet: 0.0214
+The results show that performance peaks at a threshold of 0.6, achieving the highest mAP (0.2595). Thresholds below 0.6 slightly underperform, while thresholds above 0.6 lead to a clear decline in mAP, indicating that higher thresholds become too restrictive and discard true positives. Therefore, setting the NMS threshold to 0.6 provides the best balance between suppressing duplicate detections and retaining correct ones.
 
-### thr = 0.9
-mAP=0.2224
-Per-class mAPs:
-  barcode: 0.1795
-  car: 0.1180
-  cardboard box: 0.3501
-  fire: 0.0000
-  forklift: 0.1803
-  freight container: 0.0229
-  gloves: 0.1707
-  helmet: 0.0965
-  ladder: 0.0414
-  license plate: 0.1158
-  person: 0.1290
-  qr code: 0.3713
-  road sign: 0.0403
-  safety vest: 0.0849
-  smoke: 0.0389
-  traffic cone: 0.1338
-  traffic light: 0.1684
-  truck: 0.1952
-  van: 0.2301
-  wood pallet: 0.0206
 
-# Evaluation
-Threshold of 0.6 is the best.
+# Task 4 - Data Augmentation
 
-# Task 4
-### Gaussian Blur
-IoU=0.50: mAP=0.1886
-IoU=0.55: mAP=0.1860
-IoU=0.60: mAP=0.1795
-IoU=0.65: mAP=0.1720
-IoU=0.70: mAP=0.1573
-IoU=0.75: mAP=0.1299
-IoU=0.80: mAP=0.0935
-IoU=0.85: mAP=0.0421
-IoU=0.90: mAP=0.0131
-IoU=0.95: mAP=0.0017
-Per-class mAPs:
-  barcode: 0.1779
-  car: 0.1390
-  cardboard box: 0.3387
-  fire: 0.0000
-  forklift: 0.1665
-  freight container: 0.0200
-  gloves: 0.1716
-  helmet: 0.0263
-  ladder: 0.0324
-  license plate: 0.0937
-  person: 0.0662
-  qr code: 0.3310
-  road sign: 0.0261
-  safety vest: 0.0422
-  smoke: 0.0297
-  traffic cone: 0.0944
-  traffic light: 0.1744
-  truck: 0.1545
-  van: 0.2260
-  wood pallet: 0.0170
+The following table reports overall mAP and per-class mAPs for three augmentations: Gaussian Blur, Vertical Flip, and Adjust Brightness.
 
-### Vertical Flip
-IoU=0.50: mAP=0.0373
-IoU=0.55: mAP=0.0342
-IoU=0.60: mAP=0.0299
-IoU=0.65: mAP=0.0254
-IoU=0.70: mAP=0.0211
-IoU=0.75: mAP=0.0139
-IoU=0.80: mAP=0.0070
-IoU=0.85: mAP=0.0028
-IoU=0.90: mAP=0.0005
-IoU=0.95: mAP=0.0000
-Per-class mAPs:
-  barcode: 0.0841
-  car: 0.0059
-  cardboard box: 0.0201
-  fire: 0.0000
-  forklift: 0.0000
-  freight container: 0.0119
-  gloves: 0.0010
-  helmet: 0.0011
-  ladder: 0.0050
-  license plate: 0.0015
-  person: 0.0008
-  qr code: 0.0320
-  road sign: 0.0054
-  safety vest: 0.0016
-  smoke: 0.0000
-  traffic cone: 0.0015
-  traffic light: 0.0280
-  truck: 0.1058
-  van: 0.0303
-  wood pallet: 0.0080
+| Class            | Gaussian Blur | Vertical Flip | Adjust Brightness |
+|------------------|---------------|---------------|-------------------|
+| **Overall mAP**  | 0.1886        | 0.0373        | 0.2507            |
+| barcode          | 0.1779        | 0.0841        | 0.1484            |
+| car              | 0.1390        | 0.0059        | 0.1753            |
+| cardboard box    | 0.3387        | 0.0201        | 0.3624            |
+| fire             | 0.0000        | 0.0000        | 0.0000            |
+| forklift         | 0.1665        | 0.0000        | 0.1996            |
+| freight container| 0.0200        | 0.0119        | 0.0282            |
+| gloves           | 0.1716        | 0.0010        | 0.1942            |
+| helmet           | 0.0263        | 0.0011        | 0.0928            |
+| ladder           | 0.0324        | 0.0050        | 0.0454            |
+| license plate    | 0.0937        | 0.0015        | 0.1149            |
+| person           | 0.0662        | 0.0008        | 0.1307            |
+| qr code          | 0.3310        | 0.0320        | 0.3780            |
+| road sign        | 0.0261        | 0.0054        | 0.0411            |
+| safety vest      | 0.0422        | 0.0016        | 0.0710            |
+| smoke            | 0.0297        | 0.0000        | 0.0379            |
+| traffic cone     | 0.0944        | 0.0015        | 0.1308            |
+| traffic light    | 0.1744        | 0.0280        | 0.1884            |
+| truck            | 0.1545        | 0.1058        | 0.2554            |
+| van              | 0.2260        | 0.0303        | 0.3697            |
+| wood pallet      | 0.0170        | 0.0080        | 0.0214            |
 
-### Adjust Brightness
-IoU=0.50: mAP=0.2507
-IoU=0.55: mAP=0.2437
-IoU=0.60: mAP=0.2347
-IoU=0.65: mAP=0.2216
-IoU=0.70: mAP=0.2010
-IoU=0.75: mAP=0.1648
-IoU=0.80: mAP=0.1121
-IoU=0.85: mAP=0.0503
-IoU=0.90: mAP=0.0124
-IoU=0.95: mAP=0.0014
-Per-class mAPs:
-  barcode: 0.1484
-  car: 0.1753
-  cardboard box: 0.3624
-  fire: 0.0000
-  forklift: 0.1996
-  freight container: 0.0282
-  gloves: 0.1942
-  helmet: 0.0928
-  ladder: 0.0454
-  license plate: 0.1149
-  person: 0.1307
-  qr code: 0.3780
-  road sign: 0.0411
-  safety vest: 0.0710
-  smoke: 0.0379
-  traffic cone: 0.1308
-  traffic light: 0.1884
-  truck: 0.2554
-  van: 0.3697
-  wood pallet: 0.0214
 
-# Task 5
+This table reveals clear differences in how augmentations affect model performance:
+
+- **Gaussian Blur** reduces overall mAP from the baseline (0.3079 in Task 1) to 0.1886. The drop indicates that the model struggles with blurred inputs, particularly for small or detail-dependent objects such as license plates (0.0937 vs 0.1453 in Task 1) and helmets (0.0263 vs 0.0973 in Task 1), which rely on fine-grained features. However, relatively structured classes like cardboard box (0.3387 vs 0.3629 in Task 1) and QR code (0.3310 vs 0.4097 in Task 1) remain more resilient.
+
+- **Vertical Flip** severely degrades performance (overall mAP = 0.0373). This is expected since many objects in the dataset (cars, license plates, people) have strong orientation, and vertical flipping creates unrealistic examples that confuse the detector. Only a few classes such as truck (0.1058 vs 0.3380 in Task 1) retain marginal detection ability, while most others collapse close to zero mAP.
+
+- **Adjust Brightness** achieves the best robustness among the three augmentations, with an overall mAP of 0.2507. While still lower than the baseline of 0.3079, it preserves performance reasonably well across most classes. Some examples include cardboard box (0.3624 vs 0.3629 in Task 1) and QR code (0.3780 vs 0.4097 in Task 1). This indicates the model can handle brightness variations reasonably well, but its accuracy is not fully preserved.
+
+**Conclusion:** The model is moderately robust to brightness variation, vulnerable to blur, and highly sensitive to unnatural orientation changes such as vertical flips. These findings imply that including realistic augmentations (e.g., brightness adjustments) could improve generalization, while unrealistic ones (vertical flips) should be avoided.
+
+
+# Task 5 - Hard Negative Mining
+
