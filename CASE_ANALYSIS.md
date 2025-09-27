@@ -138,18 +138,49 @@ This table reveals clear differences in how augmentations affect model performan
 
 
 # Task 5 - Hard Negative Mining
-### Control
-{'barcode': 12, 'car': 143, 'cardboard box': 60, 'fire': 40, 'forklift': 159, 'freight container': 9, 'gloves': 35, 'helmet': 145, 'ladder': 21, 'license plate': 30, 'person': 384, 'qr code': 19, 'road sign': 36, 'safety vest': 148, 'smoke': 60, 'traffic cone': 25, 'traffic light': 35, 'truck': 80, 'van': 99, 'wood pallet': 70}
-{'barcode': 0.1643835616438356, 'car': 0.20028011204481794, 'cardboard box': 0.012391573729863693, 'fire': 0.016515276630883566, 'forklift': 0.25562700964630225, 'freight container': 0.036734693877551024, 'gloves': 0.26717557251908397, 'helmet': 0.06833176248821866, 'ladder': 0.09170305676855896, 'license plate': 0.11363636363636363, 'person': 0.06486486486486487, 'qr code': 0.14285714285714285, 'road sign': 0.059113300492610835, 'safety vest': 0.12071778140293637, 'smoke': 0.052770448548812667, 'traffic cone': 0.08710801393728224, 'traffic light': 0.07042253521126761, 'truck': 0.3252032520325203, 'van': 0.35231316725978645, 'wood pallet': 0.0076261030613356574}
 
-### Emphasize Location Loss
-{'barcode': 12, 'car': 143, 'cardboard box': 60, 'fire': 40, 'forklift': 159, 'freight container': 9, 'gloves': 35, 'helmet': 145, 'ladder': 21, 'license plate': 30, 'person': 384, 'qr code': 19, 'road sign': 36, 'safety vest': 148, 'smoke': 60, 'traffic cone': 25, 'traffic light': 35, 'truck': 80, 'van': 99, 'wood pallet': 70}
-{'barcode': 0.1643835616438356, 'car': 0.20028011204481794, 'cardboard box': 0.012391573729863693, 'fire': 0.016515276630883566, 'forklift': 0.25562700964630225, 'freight container': 0.036734693877551024, 'gloves': 0.26717557251908397, 'helmet': 0.06833176248821866, 'ladder': 0.09170305676855896, 'license plate': 0.11363636363636363, 'person': 0.06486486486486487, 'qr code': 0.14285714285714285, 'road sign': 0.059113300492610835, 'safety vest': 0.12071778140293637, 'smoke': 0.052770448548812667, 'traffic cone': 0.08710801393728224, 'traffic light': 0.07042253521126761, 'truck': 0.3252032520325203, 'van': 0.35231316725978645, 'wood pallet': 0.0076261030613356574}
+We analyzed how different lambda (λ) values in Hard Negative Mining (HNM) influence the selection of images. Our procedure selects the top 1000 images with the highest loss per configuration. We tested four lambda configurations:
 
-### Emphasize Objectness Loss
-{'barcode': 12, 'car': 143, 'cardboard box': 60, 'fire': 40, 'forklift': 159, 'freight container': 9, 'gloves': 35, 'helmet': 145, 'ladder': 21, 'license plate': 30, 'person': 384, 'qr code': 19, 'road sign': 36, 'safety vest': 148, 'smoke': 60, 'traffic cone': 25, 'traffic light': 35, 'truck': 80, 'van': 99, 'wood pallet': 70}
-{'barcode': 0.1643835616438356, 'car': 0.20028011204481794, 'cardboard box': 0.012391573729863693, 'fire': 0.016515276630883566, 'forklift': 0.25562700964630225, 'freight container': 0.036734693877551024, 'gloves': 0.26717557251908397, 'helmet': 0.06833176248821866, 'ladder': 0.09170305676855896, 'license plate': 0.11363636363636363, 'person': 0.06486486486486487, 'qr code': 0.14285714285714285, 'road sign': 0.059113300492610835, 'safety vest': 0.12071778140293637, 'smoke': 0.052770448548812667, 'traffic cone': 0.08710801393728224, 'traffic light': 0.07042253521126761, 'truck': 0.3252032520325203, 'van': 0.35231316725978645, 'wood pallet': 0.0076261030613356574}
+- **Control**: λ = (0.33, 0.33, 0.33, 1)
+- **Emphasize Location**: λ = (1, 0.33, 0.33, 1)
+- **Emphasize Objectness**: λ = (0.33, 1, 0.33, 1)
+- **Emphasize Class**: λ = (0.33, 0.33, 1, 1)
 
-### Emphasize Class Loss
-{'barcode': 12, 'car': 143, 'cardboard box': 60, 'fire': 40, 'forklift': 159, 'freight container': 9, 'gloves': 35, 'helmet': 145, 'ladder': 21, 'license plate': 30, 'person': 384, 'qr code': 19, 'road sign': 36, 'safety vest': 148, 'smoke': 60, 'traffic cone': 25, 'traffic light': 35, 'truck': 80, 'van': 99, 'wood pallet': 70}
-{'barcode': 0.1643835616438356, 'car': 0.20028011204481794, 'cardboard box': 0.012391573729863693, 'fire': 0.016515276630883566, 'forklift': 0.25562700964630225, 'freight container': 0.036734693877551024, 'gloves': 0.26717557251908397, 'helmet': 0.06833176248821866, 'ladder': 0.09170305676855896, 'license plate': 0.11363636363636363, 'person': 0.06486486486486487, 'qr code': 0.14285714285714285, 'road sign': 0.059113300492610835, 'safety vest': 0.12071778140293637, 'smoke': 0.052770448548812667, 'traffic cone': 0.08710801393728224, 'traffic light': 0.07042253521126761, 'truck': 0.3252032520325203, 'van': 0.35231316725978645, 'wood pallet': 0.0076261030613356574}
+By varying these parameters, we observe how the weighting of bounding box regression, objectness, and class losses affects which types of annotations contribute the hardest negatives, directly affecting which images get selected. For example, emphasizing location prioritizes images where bounding box errors are largest, while emphasizing class increases the selection of images with misclassified objects. This analysis helps identify which classes are most affected by what type of loss.
+
+### Analysis
+
+The following table shows the distribution of classes within the top 1000 hardest negative images for each lambda configuration. Absolute counts indicate how many images contained a specific class.
+
+| Class            | Control Count | Location Count | Objectness Count | Class Count |
+|------------------|---------------|----------------|------------------|-------------|
+| barcode          | 3             | 3              | 3                | 3           |
+| car              | 77            | 78             | 75               | 81          |
+| cardboard box    | 181           | 183            | 182              | 178         |
+| fire             | 13            | 14             | 12               | 11          |
+| forklift         | 75            | 84             | 73               | 69          |
+| freight container| 15            | 16             | 15               | 16          |
+| gloves           | 17            | 16             | 17               | 18          |
+| helmet           | 323           | 317            | 321              | 329         |
+| ladder           | 17            | 17             | 19               | 19          |
+| license plate    | 25            | 24             | 26               | 27          |
+| person           | 512           | 505            | 511              | 517         |
+| qr code          | 8             | 8              | 8                | 8           |
+| road sign        | 30            | 31             | 30               | 31          |
+| safety vest      | 268           | 266            | 266              | 274         |
+| smoke            | 14            | 15             | 14               | 11          |
+| traffic cone     | 18            | 16             | 19               | 18          |
+| traffic light    | 27            | 20             | 27               | 28          |
+| truck            | 21            | 26             | 20               | 21          |
+| van              | 22            | 26             | 21               | 22          |
+| wood pallet      | 166           | 159            | 168              | 164         |
+
+From the table, we can observe how varying lambda values shifts the emphasis of HNM sampling and impacts specific classes:
+
+- **Emphasizing Location** increases the representation of classes where bounding box errors are largest. For example, images containing the forklift class (75 → 84) are more frequently selected compared to the control configuration. This is likely due to its large size and complex shape, which can lead to higher localization errors. In contrast, other classes, like wood pallet (166 → 159), are smaller and easier to detect, so fewer images containing this class are selected. Similarly, images with helmets (323 → 317) are often small and well-centered, resulting in fewer selections for this class.
+
+- **Emphasizing Objectness** shifts focus toward classes with uncertain objectness predictions. The counts are similar to the control configuration, with classes usually deviating by at most 2 observations. This indicates that all classes have comparable objectness detection losses. As no class is disproportionately affected, image selection is mostly unchanged.
+
+- **Emphasizing Class** increases the selection of images prone to misclassification. Notably, images containing helmets (323 → 329) and safety vests (268 → 274) have higher representation, indicating that these examples are harder to classify. Other classes may not be significantly easier to classify, as no class experienced a substantial decrease in representation compared to the control configuration; the largest decrease was only 3 images for a single class.
+
+Adjusting λ values in HNM enables targeted sampling, helping the model focus on localization, objectness, or classification for specific classes and images.

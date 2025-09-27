@@ -222,8 +222,8 @@ def map_dets_to_gts(
     img_gts: List[Tuple[int, int, int, int, int]]
 ) -> List[Tuple[Det, Tuple[int, int, int, int, int] | None]]:
     # map one ground truth to one detection
-    gt_to_det_idx: int = [-1] * len(img_gts)
-    gt_to_det_iou: float = [0] * len(img_gts)
+    gt_to_det_idx: List[int] = [-1] * len(img_gts)
+    gt_to_det_iou: List[float] = [0] * len(img_gts)
     for det_idx, det in enumerate(dets):
         matched_gt_idx, matched_gt_iou = get_gt_idx_with_highest_iou(det, img_gts)
         
@@ -266,6 +266,9 @@ def L_bb(
 ) -> float:
     xh, yh, wh, hh = det[:4]
     x, y, w, h = gt[1:]
+    # Normalize so that this doesn't inflate the loss
+    xh, yh, wh, hh = xh / 640, yh / 640, wh / 640, hh / 640
+    x, y, w, h = x / 640, y / 640, w / 640, h / 640
     return (x - xh) ** 2 + (y - yh) ** 2 + (w - wh) ** 2 + (h - hh) ** 2
 
 def L_obj(
@@ -313,7 +316,7 @@ def get_loss(
             res += lambda_no_obj * L_obj(det, gt)
         else:
             res += lambda_bb * L_bb(det, gt) + lambda_obj * L_obj(det, gt) + lambda_cls * L_cls(det, gt)
-    return res / len(dets)
+    return res
 
 # %%
 # Convert categories into a list of class names (index = class id)
@@ -360,6 +363,8 @@ def count_top_losses(loss_results: List[Tuple[float, str, set[int]]], top_k: int
 
 # %%
 # Count class frequencies across all ground truths
+from collections import Counter
+
 all_class_ids = []
 for fname, gt_list in gts.items():
     for gt in gt_list:
