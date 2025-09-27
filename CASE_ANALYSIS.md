@@ -1,10 +1,10 @@
 # Task 1
 To achieve these results, we first applied NMS with confidence threshold 0.5 and IOU threshold 0.4. When matching ground truths to detections, we used an IOU threshold of 0.5.
 
-| Model | Precision | Recall | mAP             |
-|-------|-----------|--------| --------------- |
-| 1     | 0.9212    | 0.3025 | 0.2561          |
-| 2     | 0.9441    | 0.4135 | 0.3079          |
+| Model | Precision  | Recall     | mAP        |
+|-------|------------|------------|------------|
+| 1     | 0.9212     | 0.3025     | 0.2561     |
+| 2     | **0.9441** | **0.4135** | **0.3079** |
 
 | Class            | Model 1 mAP | Model 2 mAP |
 |------------------|-------------|-------------|
@@ -29,7 +29,7 @@ To achieve these results, we first applied NMS with confidence threshold 0.5 and
 | van              | 0.4151      | 0.4879      |
 | wood pallet      | 0.0207      | 0.0261      |
 
-Model 2 outperforms Model 1 overall, achieving higher precision (0.9441 vs. 0.9212), recall (0.4135 vs. 0.3025), and mAP (0.3079 vs. 0.2561). At the per-class level, Model 2 shows clear improvements for cardboard box, forklift, gloves, ladder, person, safety vest, traffic light, truck, and van, often with substantial gains (e.g., gloves: 0.1552 → 0.3128, truck: 0.2495 → 0.3380, van: 0.4151 → 0.4879). Model 1 performs slightly better on a few classes such as car (0.3042 vs. 0.2999), but the differences are small. Both models struggle equally on classes like fire (0.0000) and freight container (mAP < 0.05). Overall, Model 2 demonstrates broader and more consistent improvements across classes, making it the stronger choice.
+Model 2 outperforms Model 1 overall, achieving higher precision (0.9441 vs. 0.9212), recall (0.4135 vs. 0.3025), and mAP (0.3079 vs. 0.2561). At the per-class level, Model 2 shows clear improvements for cardboard box, forklift, gloves, ladder, person, safety vest, traffic light, truck, and van, often with substantial gains (e.g., gloves: 0.3128 vs 0.1552, truck: 0.3380 vs 0.2495, van: 0.4879 vs 0.4151). Model 1 performs slightly better on a few classes such as car (0.3042 vs. 0.2999), but the differences are small. Both models struggle equally on classes like fire (0.0000) and freight container (mAP < 0.05). Overall, Model 2 demonstrates broader and more consistent improvements across classes, making it the stronger choice.
 
 # Task 2
 
@@ -82,16 +82,7 @@ The distribution in the sampled classes remains approximately the same as the or
 
 # Task 3
 ### thr = 0.4
-IoU=0.50: mAP=0.2575
-IoU=0.55: mAP=0.2491
-IoU=0.60: mAP=0.2411
-IoU=0.65: mAP=0.2305
-IoU=0.70: mAP=0.2113
-IoU=0.75: mAP=0.1715
-IoU=0.80: mAP=0.1134
-IoU=0.85: mAP=0.0531
-IoU=0.90: mAP=0.0150
-IoU=0.95: mAP=0.0015
+mAP=0.2575
 Per-class mAPs:
   barcode: 0.1795
   car: 0.1864
@@ -115,16 +106,7 @@ Per-class mAPs:
   wood pallet: 0.0217
 
 ### thr = 0.5
-IoU=0.50: mAP=0.2588
-IoU=0.55: mAP=0.2499
-IoU=0.60: mAP=0.2415
-IoU=0.65: mAP=0.2308
-IoU=0.70: mAP=0.2116
-IoU=0.75: mAP=0.1718
-IoU=0.80: mAP=0.1136
-IoU=0.85: mAP=0.0532
-IoU=0.90: mAP=0.0150
-IoU=0.95: mAP=0.0015
+mAP=0.2588
 Per-class mAPs:
   barcode: 0.1795
   car: 0.1860
@@ -148,16 +130,7 @@ Per-class mAPs:
   wood pallet: 0.0217
 
 ### thr = 0.6
-IoU=0.50: mAP=0.2595
-IoU=0.55: mAP=0.2506
-IoU=0.60: mAP=0.2422
-IoU=0.65: mAP=0.2315
-IoU=0.70: mAP=0.2115
-IoU=0.75: mAP=0.1717
-IoU=0.80: mAP=0.1136
-IoU=0.85: mAP=0.0531
-IoU=0.90: mAP=0.0149
-IoU=0.95: mAP=0.0015
+mAP=0.2595
 Per-class mAPs:
   barcode: 0.1795
   car: 0.1869
@@ -181,16 +154,7 @@ Per-class mAPs:
   wood pallet: 0.0217
 
 ### thr = 0.7
-IoU=0.50: mAP=0.2569
-IoU=0.55: mAP=0.2477
-IoU=0.60: mAP=0.2390
-IoU=0.65: mAP=0.2296
-IoU=0.70: mAP=0.2094
-IoU=0.75: mAP=0.1711
-IoU=0.80: mAP=0.1139
-IoU=0.85: mAP=0.0523
-IoU=0.90: mAP=0.0147
-IoU=0.95: mAP=0.0015
+mAP=0.2569
 Per-class mAPs:
   barcode: 0.1795
   car: 0.1809
@@ -214,16 +178,7 @@ Per-class mAPs:
   wood pallet: 0.0216
 
 ### thr = 0.8
-IoU=0.50: mAP=0.2473
-IoU=0.55: mAP=0.2387
-IoU=0.60: mAP=0.2304
-IoU=0.65: mAP=0.2215
-IoU=0.70: mAP=0.2022
-IoU=0.75: mAP=0.1679
-IoU=0.80: mAP=0.1144
-IoU=0.85: mAP=0.0517
-IoU=0.90: mAP=0.0146
-IoU=0.95: mAP=0.0014
+mAP=0.2473
 Per-class mAPs:
   barcode: 0.1795
   car: 0.1620
@@ -247,16 +202,7 @@ Per-class mAPs:
   wood pallet: 0.0214
 
 ### thr = 0.9
-IoU=0.50: mAP=0.2224
-IoU=0.55: mAP=0.2139
-IoU=0.60: mAP=0.2069
-IoU=0.65: mAP=0.1982
-IoU=0.70: mAP=0.1809
-IoU=0.75: mAP=0.1500
-IoU=0.80: mAP=0.1047
-IoU=0.85: mAP=0.0506
-IoU=0.90: mAP=0.0148
-IoU=0.95: mAP=0.0015
+mAP=0.2224
 Per-class mAPs:
   barcode: 0.1795
   car: 0.1180
