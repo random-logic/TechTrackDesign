@@ -389,6 +389,11 @@ class_counts_named = {categories[i]: class_counts[i] for i in range(len(categori
 class_counts_named
 
 # %%
+total_classes = sum(class_counts.values())
+class_percentages = {categories[i]: class_counts[i] / total_classes * 100 for i in range(len(categories))}
+class_percentages
+
+# %%
 # Normalize top losses by overall class frequency
 relative_loss_contrib = {}
 for cls_name in categories:
