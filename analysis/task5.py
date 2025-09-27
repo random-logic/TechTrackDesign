@@ -316,17 +316,6 @@ def get_loss(
     return res / len(dets)
 
 # %%
-loss: List[Tuple[float, str, Set[int]]] = []
-for fname, dets in out2.items():
-    img_gts = gts[fname]
-
-    all_class_ids = set()
-    for gt in img_gts:
-        all_class_ids.add(gt[0])
-
-    loss.append((get_loss(dets, img_gts, 0.33, 0.33, 0.33, 1), fname, all_class_ids))
-
-# %%
 # Convert categories into a list of class names (index = class id)
 categories = [
     'barcode',
@@ -369,12 +358,7 @@ def count_top_losses(loss_results: List[Tuple[float, str, set[int]]], top_k: int
     result = {categories[i]: class_counts[i] for i in range(len(categories))}
     return result
 
-top_losses_count = count_top_losses(loss, top_k=1000)
-top_losses_count
-
 # %%
-from collections import Counter
-
 # Count class frequencies across all ground truths
 all_class_ids = []
 for fname, gt_list in gts.items():
@@ -385,21 +369,52 @@ class_counts = Counter(all_class_ids)
 
 # Convert to readable dict with class names
 class_counts_named = {categories[i]: class_counts[i] for i in range(len(categories))}
-class_counts_named
+print(class_counts_named)
 
-# %%
 total_classes = sum(class_counts.values())
 class_percentages = {categories[i]: class_counts[i] / total_classes * 100 for i in range(len(categories))}
-class_percentages
+print(class_percentages)
 
 # %%
-# Normalize top losses by overall class frequency
-relative_loss_contrib = {}
-for cls_name in categories:
-    total = class_counts_named.get(cls_name, 0)
-    top = top_losses_count.get(cls_name, 0)
-    relative_loss_contrib[cls_name] = top / total if total > 0 else 0
+from collections import Counter
 
-relative_loss_contrib
+def assess_loss(lambda_bb: float, lambda_obj: float, lambda_cls: float, lambda_no_obj: float):
+    loss: List[Tuple[float, str, Set[int]]] = []
+    for fname, dets in out2.items():
+        img_gts = gts[fname]
+
+        all_class_ids = set()
+        for gt in img_gts:
+            all_class_ids.add(gt[0])
+
+        loss.append((get_loss(dets, img_gts, lambda_bb, lambda_obj, lambda_cls, lambda_no_obj), fname, all_class_ids))
+
+    top_losses_count = count_top_losses(loss, top_k=1000)
+    print(top_losses_count)
+
+    # Normalize top losses by overall class frequency
+    relative_loss_contrib = {}
+    for cls_name in categories:
+        total = class_counts_named.get(cls_name, 0)
+        top = top_losses_count.get(cls_name, 0)
+        relative_loss_contrib[cls_name] = top / total if total > 0 else 0
+
+    print(relative_loss_contrib)
+
+# %%
+# Control
+assess_loss(0.33, 0.33, 0.33, 1)
+
+# %%
+# Emphasize Location Loss
+assess_loss(1, 0.33, 0.33, 1)
+
+# %%
+# Emphasize Objectness Loss
+assess_loss(0.33, 1, 0.33, 1)
+
+# %%
+# Emphasize Class Loss
+assess_loss(0.33, 0.33, 1, 1)
 
 # %%
