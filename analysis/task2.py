@@ -152,7 +152,7 @@ def stratified_balanced_sample(
 
 # %%
 out2 = load_detections_from_h5(2)
-gts = get_gts()  # your ground truths
+gts = get_gts()
 class_id_to_name = {
     0: "barcode",
     1: "car",

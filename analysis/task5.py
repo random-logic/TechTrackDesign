@@ -327,7 +327,6 @@ for fname, dets in out2.items():
     loss.append((get_loss(dets, img_gts, 0.33, 0.33, 0.33, 1), fname, all_class_ids))
 
 # %%
-# Your code here
 # Convert categories into a list of class names (index = class id)
 categories = [
     'barcode',
