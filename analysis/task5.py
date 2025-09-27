@@ -1,5 +1,5 @@
 # %%
-from typing import Dict, List, Tuple, Any, Callable
+from typing import Dict, List, Tuple, Any, Set
 import h5py
 import os
 import h5py
@@ -175,8 +175,11 @@ def load_outputs_from_h5(
     return res
 
 # %%
-# Detect all the negative examples incorrectly classified as positive
+# Load gts
 gts = load_gts_from_h5(2)
+
+# %%
+# Detect all the negative examples incorrectly classified as positive
 out2 = get_nms(get_outputs(2, gts))
 
 save_outputs_to_h5(out2, 2)
@@ -239,7 +242,8 @@ def map_dets_to_gts(
     # Map detections idx to ground truths idx
     det_to_gt_idx: int = [-1] * len(dets)
     for gt_idx, det_idx in enumerate(gt_to_det_idx):
-        det_to_gt_idx[det_idx] = gt_idx
+        if det_idx >= 0:
+            det_to_gt_idx[det_idx] = gt_idx
 
     del gt_to_det_idx
     
@@ -260,11 +264,26 @@ def L_bb(
     det: Det,
     gt: Tuple[int, int, int, int, int]
 ) -> float:
-    x, y, w, h = det[:4]
-    xh, yh, wh, hh = gt[1:]
+    xh, yh, wh, hh = det[:4]
+    x, y, w, h = gt[1:]
     return (x - xh) ** 2 + (y - yh) ** 2 + (w - wh) ** 2 + (h - hh) ** 2
 
-# TODO - other loss functions
+def L_obj(
+    det: Det,
+    gt: Tuple[int, int, int, int, int] | None
+) -> float:
+    p0h = det[4]
+    p0 = 1 if gt is not None else 0
+    return (p0 - p0h) ** 2
+
+def L_cls(
+    det: Det,
+    gt: Tuple[int, int, int, int, int]
+) -> float:
+    res = 0
+    for c, pch in enumerate(det[-1]):
+        res += (pch - 1 if gt[0] == c else 0) ** 2
+    return res
 
 def get_loss(
     dets: List[Det],
@@ -274,25 +293,109 @@ def get_loss(
     lambda_cls: float,
     lambda_no_obj: float
 ) -> float:
+    """
+    L_total = 0
+    N = number of candidate detections
+    for prediction in predictions:
+        if iou(ground_truth, prediction) > iou_threshold :
+            L_total += λ_bb L_bb + λ_obj L_obj + λ_cls L_cls
+        else:
+            L_total += λ_no_obj L_obj
+    return L_total / N
+    """
     res = 0.0
+    
+    if len(dets) == 0:
+        return res
+    
     for det, gt in map_dets_to_gts(dets, img_gts):
         if gt is None:
-            res += lambda_no_obj
-            continue
-        # TODO
-
-"""
-L_total = 0
-N = number of candidate detections
-for prediction in predictions:
-    if iou(ground_truth, prediction) > iou_threshold :
-        L_total += λ_bb L_bb + λ_obj L_obj + λ_cls L_cls
-    else:
-        L_total += λ_no_obj L_obj
-return L_total / N
-"""
+            res += lambda_no_obj * L_obj(det, gt)
+        else:
+            res += lambda_bb * L_bb(det, gt) + lambda_obj * L_obj(det, gt) + lambda_cls * L_cls(det, gt)
+    return res / len(dets)
 
 # %%
+loss: List[Tuple[float, str, Set[int]]] = []
 for fname, dets in out2.items():
     img_gts = gts[fname]
-    
+
+    all_class_ids = set()
+    for gt in img_gts:
+        all_class_ids.add(gt[0])
+
+    loss.append((get_loss(dets, img_gts, 0.33, 0.33, 0.33, 1), fname, all_class_ids))
+
+# %%
+# Your code here
+# Convert categories into a list of class names (index = class id)
+categories = [
+    'barcode',
+    'car',
+    'cardboard box',
+    'fire',
+    'forklift',
+    'freight container',
+    'gloves',
+    'helmet',
+    'ladder',
+    'license plate',
+    'person',
+    'qr code',
+    'road sign',
+    'safety vest',
+    'smoke',
+    'traffic cone',
+    'traffic light',
+    'truck',
+    'van',
+    'wood pallet'
+]
+
+def count_top_losses(loss_results: List[Tuple[float, str, set[int]]], top_k: int = 1000):
+    """
+    loss_results: list of (loss_value, set_of_class_ids)
+    top_k: number of highest losses to consider
+    """
+    # Sort by loss descending and take top_k
+    top_losses = sorted(loss_results, key=lambda x: x[0], reverse=True)[:top_k]
+
+    # Count frequencies
+    class_counts = [0] * len(categories)
+    for _, _, cls_set in top_losses:
+        for cls_id in cls_set:
+            class_counts[cls_id] += 1
+
+    # Map back to names
+    result = {categories[i]: class_counts[i] for i in range(len(categories))}
+    return result
+
+top_losses_count = count_top_losses(loss, top_k=1000)
+top_losses_count
+
+# %%
+from collections import Counter
+
+# Count class frequencies across all ground truths
+all_class_ids = []
+for fname, gt_list in gts.items():
+    for gt in gt_list:
+        all_class_ids.append(gt[0])
+
+class_counts = Counter(all_class_ids)
+
+# Convert to readable dict with class names
+class_counts_named = {categories[i]: class_counts[i] for i in range(len(categories))}
+class_counts_named
+
+# %%
+# Normalize top losses by overall class frequency
+relative_loss_contrib = {}
+for cls_name in categories:
+    total = class_counts_named.get(cls_name, 0)
+    top = top_losses_count.get(cls_name, 0)
+    relative_loss_contrib[cls_name] = top / total if total > 0 else 0
+
+relative_loss_contrib
+
+# %%
